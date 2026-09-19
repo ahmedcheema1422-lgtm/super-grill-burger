@@ -8,6 +8,7 @@ const STORAGE_KEY = 'super-grill-cart'
 const VISIT_POPUP_KEY = 'super-grill-visit-popup-closed'
 const USERS_KEY = 'super-grill-users'
 const SESSION_KEY = 'super-grill-session'
+const LAST_EMAIL_KEY = 'super-grill-last-email'
 
 const Footer = () => (
   <footer className="site-footer">
@@ -94,7 +95,13 @@ const App = () => {
   const [authForm, setAuthForm] = useState({
     name: '',
     phone: '',
-    email: '',
+    email: (() => {
+      try {
+        return localStorage.getItem(LAST_EMAIL_KEY) || ''
+      } catch {
+        return ''
+      }
+    })(),
     address: '',
     password: '',
     confirmPassword: '',
@@ -307,6 +314,7 @@ const App = () => {
 
         localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]))
         localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
+        localStorage.setItem(LAST_EMAIL_KEY, newUser.email)
         setCurrentUser(newUser)
         setCustomer((previous) => ({
           ...previous,
@@ -323,6 +331,7 @@ const App = () => {
         }
 
         localStorage.setItem(SESSION_KEY, JSON.stringify(user))
+        localStorage.setItem(LAST_EMAIL_KEY, user.email)
         setCurrentUser(user)
         setCustomer((previous) => ({
           ...previous,
@@ -332,7 +341,7 @@ const App = () => {
         }))
       }
 
-      setAuthForm({ name: '', phone: '', email: '', address: '', password: '', confirmPassword: '' })
+      setAuthForm({ name: '', phone: '', email, address: '', password: '', confirmPassword: '' })
       setAuthError('')
       setVisitPopupOpen(false)
     } catch {
@@ -348,8 +357,11 @@ const App = () => {
   }
 
   const handleLogout = () => {
+    const savedEmail = currentUser?.email || ''
     localStorage.removeItem(SESSION_KEY)
     setCurrentUser(null)
+    setAuthMode('login')
+    setAuthForm({ name: '', phone: '', email: savedEmail, address: '', password: '', confirmPassword: '' })
   }
 
   return (
