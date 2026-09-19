@@ -43,9 +43,7 @@ const Footer = () => (
       <div className="footer-column">
         <h4>Opening Hours</h4>
         <ul>
-          <li>Mon - Thu: 12:00 PM - 12:00 AM</li>
-          <li>Fri - Sat: 12:00 PM - 1:00 AM</li>
-          <li>Sun: 1:00 PM - 11:00 PM</li>
+          <li>Daily: 3:00 PM - 4:00 AM</li>
         </ul>
       </div>
     </div>
@@ -80,6 +78,8 @@ const App = () => {
   })
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [orderSuccessOpen, setOrderSuccessOpen] = useState(false)
+  const [checkoutError, setCheckoutError] = useState('')
   const [authOpen, setAuthOpen] = useState(false)
   const [authMode, setAuthMode] = useState('login')
   const [currentUser, setCurrentUser] = useState(() => {
@@ -234,10 +234,20 @@ const App = () => {
       ...prev,
       [field]: value,
     }))
+    setCheckoutError('')
   }
 
   const handlePlaceOrder = () => {
     if (!customer.name || !customer.phone || !customer.address || !customer.location) {
+      setCheckoutError('Please complete your name, phone, address, and location.')
+      return
+    }
+
+    const normalizedPhone = customer.phone.replace(/[\s-]/g, '')
+    const phonePattern = /^(?:\+92|0)3\d{9}$/
+
+    if (!phonePattern.test(normalizedPhone)) {
+      setCheckoutError('Enter a valid Pakistani mobile number, for example 03001234567.')
       return
     }
 
@@ -256,6 +266,8 @@ const App = () => {
     setCheckoutOpen(false)
     setCustomer({ name: '', phone: '', address: '', location: '' })
     setCartOpen(false)
+    setCheckoutError('')
+    setOrderSuccessOpen(true)
   }
 
   const handleAuthChange = (field, value) => {
@@ -581,6 +593,7 @@ const App = () => {
                   value={customer.phone}
                   onChange={(event) => handleCustomerChange('phone', event.target.value)}
                   placeholder="03xx xxxxxxx"
+                  pattern="(?:\+92|0)3[0-9]{9}"
                 />
               </label>
 
@@ -604,12 +617,27 @@ const App = () => {
               </label>
             </div>
 
+            {checkoutError && <p className="checkout-error" role="alert">{checkoutError}</p>}
+
             <div className="checkout-footer">
               <span>Total: Rs. {cartTotal}</span>
               <button type="button" className="place-order-btn" onClick={handlePlaceOrder}>
                 Place Order
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {orderSuccessOpen && (
+        <div className="success-modal-backdrop" onClick={() => setOrderSuccessOpen(false)}>
+          <div className="success-modal" onClick={(event) => event.stopPropagation()}>
+            <div className="success-icon" aria-hidden="true">✓</div>
+            <h3>Thank you!</h3>
+            <p>Your order has been sent. We will contact you shortly to confirm it.</p>
+            <button type="button" className="primary-btn full-width-btn" onClick={() => setOrderSuccessOpen(false)}>
+              Done
+            </button>
           </div>
         </div>
       )}
