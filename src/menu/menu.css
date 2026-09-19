@@ -1,0 +1,247 @@
+.menu-page {
+  position: relative;
+  background-color: #121212;
+  color: #f8fafc;
+  padding: 110px 20px 40px;
+  min-height: 160vh;
+  overflow: visible;
+}
+
+.menu-logo-backdrop {
+  position: absolute;
+  inset: 60px 0 auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  filter: blur(2px);
+}
+
+.menu-logo-image {
+  width: 420px;
+  max-width: 80vw;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 30px rgba(255, 69, 0, 0.22);
+}
+
+.menu-header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.menu-title {
+  font-size: 2.5rem;
+  color: #ff4500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.menu-subtitle {
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+.menu-category-title {
+  position: relative;
+  z-index: 1;
+  font-size: 1.8rem;
+  color: #fbbf24;
+  margin: 40px auto 20px auto;
+  max-width: 1200px;
+  border-bottom: 2px solid #334155;
+  padding-bottom: 8px;
+}
+
+.menu-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-card {
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 18px;
+  padding: 12px;
+  border: 2px solid #ff6a1a;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.menu-card--hoverable:hover {
+  transform: translateY(-6px);
+  border-color: #ff8c42;
+  box-shadow: 0 18px 28px rgba(255, 108, 44, 0.18);
+}
+
+.menu-card--featured {
+  background: rgba(51, 65, 85, 0.72);
+  backdrop-filter: blur(10px);
+  border: 2px solid #ff6a1a;
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.28);
+}
+
+.menu-image-wrap {
+  width: 100%;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.menu-card-image {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.menu-badge {
+  align-self: flex-start;
+  background-color: #ff4500;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.menu-item-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.menu-item-desc-wrap {
+  margin-bottom: 0;
+}
+
+.menu-item-desc {
+  color: #94a3b8;
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.menu-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  box-shadow: none;
+  margin-top: 0;
+}
+
+.menu-price {
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #22c55e;
+}
+
+.menu-order-btn {
+  background-color: #ff4500;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  box-shadow: none;
+}
+
+.menu-order-btn:hover {
+  background-color: #d93a00;
+}
+
+@media (max-width: 900px) {
+  .menu-page {
+    padding-top: 150px;
+  }
+
+  .menu-title {
+    font-size: 2.2rem;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .menu-page {
+    padding: 150px 14px 30px;
+  }
+
+  .menu-header {
+    margin-bottom: 28px;
+  }
+
+  .menu-title {
+    font-size: 1.8rem;
+  }
+
+  .menu-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .menu-category-title {
+    font-size: 1.4rem;
+    margin-top: 28px;
+  }
+
+  .menu-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .menu-order-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .menu-page {
+    padding-top: 170px;
+  }
+
+  .menu-logo-image {
+    width: 300px;
+    max-width: 70vw;
+  }
+
+  .menu-title {
+    font-size: 1.5rem;
+  }
+
+  .menu-category-title {
+    font-size: 1.2rem;
+  }
+
+  .menu-item-name {
+    font-size: 1.05rem;
+  }
+
+  .menu-item-desc {
+    font-size: 0.8rem;
+  }
+}
