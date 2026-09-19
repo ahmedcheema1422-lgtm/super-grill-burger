@@ -118,6 +118,30 @@ const App = () => {
   }, [cart])
 
   useEffect(() => {
+    const faviconImage = new Image()
+    faviconImage.src = logoImage
+    faviconImage.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = 64
+      canvas.height = 64
+      const context = canvas.getContext('2d')
+
+      if (!context) return
+
+      context.beginPath()
+      context.arc(32, 32, 32, 0, Math.PI * 2)
+      context.clip()
+      context.drawImage(faviconImage, 0, 0, 64, 64)
+
+      const favicon = document.querySelector('link[rel="icon"]')
+      if (favicon) {
+        favicon.type = 'image/png'
+        favicon.href = canvas.toDataURL('image/png')
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (!visitPopupOpen) {
       try {
         localStorage.setItem(VISIT_POPUP_KEY, 'true')
