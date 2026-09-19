@@ -115,10 +115,13 @@ main {
 .navbar {
   flex-wrap: wrap;
   gap: 12px;
+  justify-content: space-between !important;
 }
 
 .nav-brand {
   min-width: 0;
+  flex: 0 1 auto !important;
+  margin-right: auto;
 }
 
 .nav-brand-backdrop {
@@ -159,6 +162,8 @@ main {
 
 .nav-actions {
   flex-wrap: wrap;
+  flex: 0 0 auto !important;
+  margin-left: auto;
 }
 
 .nav-button {
@@ -819,7 +824,7 @@ main {
   .navbar {
     display: flex !important;
     flex-wrap: nowrap;
-    justify-content: center !important;
+    justify-content: space-between !important;
     gap: 5px;
     padding: 8px 8px;
     overflow: hidden;
@@ -835,6 +840,10 @@ main {
 
   .nav-brand {
     gap: 6px !important;
+  }
+
+  .nav-actions {
+    margin-left: auto;
   }
 
   .nav-links {
