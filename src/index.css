@@ -735,33 +735,39 @@ main {
 
 @media (max-width: 540px) {
   .navbar {
-    display: grid !important;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 10px;
-    padding: 12px 14px;
+    display: flex !important;
+    flex-wrap: nowrap;
+    justify-content: center !important;
+    gap: 5px;
+    padding: 8px 8px;
+    overflow: hidden;
   }
 
   .nav-brand,
   .nav-links,
   .nav-actions {
-    width: 100%;
+    width: auto;
     min-width: 0;
-    flex: none !important;
+    flex: 0 0 auto !important;
   }
 
   .nav-brand {
-    justify-content: center;
+    gap: 0 !important;
   }
 
   .nav-links {
     order: initial;
+    flex: 0 0 auto !important;
+    width: auto;
+    flex-wrap: nowrap !important;
+    gap: 5px !important;
     justify-content: center !important;
   }
 
   .nav-actions {
     order: initial;
-    justify-content: center !important;
+    gap: 5px !important;
+    justify-content: flex-end !important;
   }
 
   .nav-brand-backdrop {
@@ -769,22 +775,25 @@ main {
   }
 
   .nav-brand-main {
-    font-size: 14px !important;
+    display: none;
   }
 
   .nav-logo {
-    width: 34px !important;
-    height: 34px !important;
+    width: 30px !important;
+    height: 30px !important;
   }
 
   .nav-links {
-    gap: 10px 16px;
-    font-size: 13px;
+    font-size: 10px !important;
   }
 
   .nav-button {
-    padding: 8px 12px !important;
-    font-size: 12px;
+    padding: 5px 6px !important;
+    font-size: 10px !important;
+  }
+
+  .nav-button--cart > span:nth-child(2) {
+    display: none;
   }
 
   .footer-grid {
