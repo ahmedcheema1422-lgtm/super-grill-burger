@@ -3,11 +3,10 @@ import Navbar from './navbar.jsx/navbar.jsx'
 import Home from './home/home.jsx'
 import Menu from './menu/menu.jsx'
 import logoImage from './assets/logo.jpg'
+import { supabase } from './lib/supabase.js'
 
 const STORAGE_KEY = 'super-grill-cart'
 const VISIT_POPUP_KEY = 'super-grill-visit-popup-closed'
-const USERS_KEY = 'super-grill-users'
-const SESSION_KEY = 'super-grill-session'
 const LAST_EMAIL_KEY = 'super-grill-last-email'
 
 const Footer = () => (
@@ -83,14 +82,7 @@ const App = () => {
   const [checkoutError, setCheckoutError] = useState('')
   const [authOpen, setAuthOpen] = useState(false)
   const [authMode, setAuthMode] = useState('login')
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      const savedUser = localStorage.getItem(SESSION_KEY)
-      return savedUser ? JSON.parse(savedUser) : null
-    } catch {
-      return null
-    }
-  })
+  const [currentUser, setCurrentUser] = useState(null)
   const [authError, setAuthError] = useState('')
   const [authForm, setAuthForm] = useState({
     name: '',
@@ -108,7 +100,7 @@ const App = () => {
   })
   const [visitPopupOpen, setVisitPopupOpen] = useState(() => {
     try {
-      return !localStorage.getItem(VISIT_POPUP_KEY) && !localStorage.getItem(SESSION_KEY)
+      return !localStorage.getItem(VISIT_POPUP_KEY)
     } catch {
       return true
     }
@@ -118,11 +110,73 @@ const App = () => {
     phone: '',
     address: '',
     location: '',
+    notes: '',
   })
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart))
   }, [cart])
+
+  const loadUserProfile = async (user) => {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('id, name, phone, address, role')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    return profile || {
+      id: user.id,
+      name: user.user_metadata?.name || '',
+      phone: user.user_metadata?.phone || '',
+      address: user.user_metadata?.address || '',
+      email: user.email || '',
+      role: 'customer',
+    }
+  }
+
+  useEffect(() => {
+    let active = true
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!active || !session?.user) return
+
+      const profile = await loadUserProfile(session.user)
+      if (active) {
+        setCurrentUser({ ...profile, email: session.user.email })
+        setCustomer((previous) => ({
+          ...previous,
+          name: profile.name,
+          phone: profile.phone,
+          address: profile.address,
+        }))
+        setVisitPopupOpen(false)
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!session?.user) {
+        if (active) setCurrentUser(null)
+        return
+      }
+
+      const profile = await loadUserProfile(session.user)
+      if (active) {
+        setCurrentUser({ ...profile, email: session.user.email })
+        setCustomer((previous) => ({
+          ...previous,
+          name: profile.name,
+          phone: profile.phone,
+          address: profile.address,
+        }))
+        setVisitPopupOpen(false)
+      }
+    })
+
+    return () => {
+      active = false
+      subscription.unsubscribe()
+    }
+  }, [])
 
   useEffect(() => {
     const faviconImage = new Image()
@@ -244,7 +298,7 @@ const App = () => {
     setCheckoutError('')
   }
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!customer.name || !customer.phone || !customer.address || !customer.location) {
       setCheckoutError('Please complete your name, phone, address, and location.')
       return
@@ -262,8 +316,41 @@ const App = () => {
       .map((item) => `${item.name} x${item.quantity} - Rs. ${item.price * item.quantity}`)
       .join('\n')
 
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .insert({
+        customer_id: currentUser.id,
+        customer_name: customer.name,
+        phone: normalizedPhone,
+        address: customer.address,
+        location: customer.location,
+        notes: customer.notes || null,
+        total: cartTotal,
+      })
+      .select('id')
+      .single()
+
+    if (orderError) {
+      setCheckoutError('Order could not be saved. Please try again.')
+      return
+    }
+
+    const { error: itemError } = await supabase.from('order_items').insert(
+      cart.map((item) => ({
+        order_id: order.id,
+        item_name: item.name,
+        quantity: item.quantity,
+        unit_price: item.price,
+      })),
+    )
+
+    if (itemError) {
+      setCheckoutError('Order items could not be saved. Please try again.')
+      return
+    }
+
     const whatsappMessage = encodeURIComponent(
-      `New Order\n\nCustomer: ${customer.name}\nPhone: ${customer.phone}\nAddress: ${customer.address}\nLocation: ${customer.location}\n\nItems:\n${itemSummary}\n\nTotal: Rs. ${cartTotal}`,
+      `New Order\n\nCustomer: ${customer.name}\nPhone: ${customer.phone}\nAddress: ${customer.address}\nLocation: ${customer.location}\nNotes: ${customer.notes || 'None'}\n\nItems:\n${itemSummary}\n\nTotal: Rs. ${cartTotal}`,
     )
 
     const whatsappUrl = `https://wa.me/923076630135?text=${whatsappMessage}`
@@ -271,7 +358,7 @@ const App = () => {
 
     setCart([])
     setCheckoutOpen(false)
-    setCustomer({ name: '', phone: '', address: '', location: '' })
+    setCustomer({ name: '', phone: '', address: '', location: '', notes: '' })
     setCartOpen(false)
     setCheckoutError('')
     setOrderSuccessOpen(true)
@@ -285,67 +372,62 @@ const App = () => {
     setAuthError('')
   }
 
-  const handleAuthSubmit = (event) => {
+  const handleAuthSubmit = async (event) => {
     event.preventDefault()
 
     const email = authForm.email.trim().toLowerCase()
 
     try {
-      const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]')
-
       if (authMode === 'signup') {
         if (authForm.password !== authForm.confirmPassword) {
           setAuthError('Passwords do not match.')
           return
         }
 
-        if (users.some((user) => user.email === email)) {
-          setAuthError('This email is already registered. Please login.')
-          return
-        }
-
-        const newUser = {
-          name: authForm.name.trim(),
-          phone: authForm.phone.trim(),
+        const { data, error } = await supabase.auth.signUp({
           email,
-          address: authForm.address.trim(),
           password: authForm.password,
-        }
+          options: {
+            data: {
+              name: authForm.name.trim(),
+              phone: authForm.phone.trim(),
+              address: authForm.address.trim(),
+            },
+          },
+        })
 
-        localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]))
-        localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
-        localStorage.setItem(LAST_EMAIL_KEY, newUser.email)
-        setCurrentUser(newUser)
-        setCustomer((previous) => ({
-          ...previous,
-          name: newUser.name,
-          phone: newUser.phone,
-          address: newUser.address,
-        }))
-      } else {
-        const user = users.find((savedUser) => savedUser.email === email)
-
-        if (!user || user.password !== authForm.password) {
-          setAuthError('Email or password is incorrect.')
+        if (error) {
+          setAuthError(error.message)
           return
         }
 
-        localStorage.setItem(SESSION_KEY, JSON.stringify(user))
-        localStorage.setItem(LAST_EMAIL_KEY, user.email)
-        setCurrentUser(user)
-        setCustomer((previous) => ({
-          ...previous,
-          name: user.name,
-          phone: user.phone,
-          address: user.address,
-        }))
+        localStorage.setItem(LAST_EMAIL_KEY, email)
+
+        if (!data.session) {
+          setAuthError('Account created. Check your email to confirm your account, then login.')
+          setAuthMode('login')
+          setAuthForm((previous) => ({ ...previous, password: '', confirmPassword: '' }))
+          return
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password: authForm.password,
+        })
+
+        if (error || !data.user) {
+          setAuthError(error?.message || 'Email or password is incorrect.')
+          return
+        }
+
+        localStorage.setItem(LAST_EMAIL_KEY, email)
       }
 
       setAuthForm({ name: '', phone: '', email, address: '', password: '', confirmPassword: '' })
       setAuthError('')
       setVisitPopupOpen(false)
     } catch {
-      setAuthError('Unable to save account in this browser.')
+      setAuthError('Unable to connect to Supabase. Please try again.')
       return
     }
 
@@ -356,9 +438,9 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     const savedEmail = currentUser?.email || ''
-    localStorage.removeItem(SESSION_KEY)
+    await supabase.auth.signOut()
     setCurrentUser(null)
     setAuthMode('login')
     setAuthForm({ name: '', phone: '', email: savedEmail, address: '', password: '', confirmPassword: '' })
@@ -625,6 +707,15 @@ const App = () => {
                   value={customer.location}
                   onChange={(event) => handleCustomerChange('location', event.target.value)}
                   placeholder="City or location"
+                />
+              </label>
+
+              <label>
+                Order Notes
+                <textarea
+                  value={customer.notes}
+                  onChange={(event) => handleCustomerChange('notes', event.target.value)}
+                  placeholder="Extra spicy, no mayo, etc."
                 />
               </label>
             </div>
