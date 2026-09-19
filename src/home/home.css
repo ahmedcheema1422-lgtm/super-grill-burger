@@ -186,16 +186,6 @@ body {
     font-size: 0.95rem;
   }
 
-  .home-nav {
-    bottom: 24px;
-    gap: 18px;
-    padding: 10px 18px;
-  }
-
-  .home-nav-link {
-    font-size: 0.82rem;
-  }
-
   .hero-btn {
     width: 100%;
   }
