@@ -1,7 +1,15 @@
+import { useState } from 'react'
 import './home.css'
 import burgerBg from '../assets/burder2.jpg'
 
 const Home = ({ currentView, onNavigate }) => {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const handleNavigate = (nextView) => {
+    onNavigate(nextView)
+    setMenuOpen(false)
+  }
+
   return (
     <section className="hero">
       <div
@@ -21,16 +29,30 @@ const Home = ({ currentView, onNavigate }) => {
       </div>
 
       <nav className="home-nav" aria-label="Main navigation">
+        <button
+          type="button"
+          className="menu-toggle"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((previous) => !previous)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <div className={`navbar-links${menuOpen ? ' active' : ''}`}>
         {['home', 'menu', 'services'].map((item) => (
           <button
             key={item}
             type="button"
             className={currentView === item ? 'home-nav-link active' : 'home-nav-link'}
-            onClick={() => onNavigate(item)}
+            onClick={() => handleNavigate(item)}
           >
             {item[0].toUpperCase() + item.slice(1)}
           </button>
         ))}
+        </div>
       </nav>
     </section>
   )
