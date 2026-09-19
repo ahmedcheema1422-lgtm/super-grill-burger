@@ -249,7 +249,7 @@ const App = () => {
       `New Order\n\nCustomer: ${customer.name}\nPhone: ${customer.phone}\nAddress: ${customer.address}\nLocation: ${customer.location}\n\nItems:\n${itemSummary}\n\nTotal: Rs. ${cartTotal}`,
     )
 
-    const whatsappUrl = `https://wa.me/923001234567?text=${whatsappMessage}`
+    const whatsappUrl = `https://wa.me/923076630135?text=${whatsappMessage}`
     window.open(whatsappUrl, '_blank')
 
     setCart([])
