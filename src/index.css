@@ -735,7 +735,33 @@ main {
 
 @media (max-width: 540px) {
   .navbar {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
     padding: 12px 14px;
+  }
+
+  .nav-brand,
+  .nav-links,
+  .nav-actions {
+    width: 100%;
+    min-width: 0;
+    flex: none !important;
+  }
+
+  .nav-brand {
+    justify-content: center;
+  }
+
+  .nav-links {
+    order: initial;
+    justify-content: center !important;
+  }
+
+  .nav-actions {
+    order: initial;
+    justify-content: center !important;
   }
 
   .nav-brand-backdrop {
