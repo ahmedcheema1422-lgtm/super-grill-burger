@@ -118,7 +118,7 @@ const Navbar = ({ currentView, onNavigate, cartCount = 0, onCartToggle, onLoginC
             padding: 0,
           }}
           onMouseEnter={(e) => {
-            e.target.style.color = '#ff2d2d'
+            e.target.style.color = '#ff8a00'
             e.target.style.fontWeight = '700'
           }}
           onMouseLeave={(e) => {
@@ -142,7 +142,7 @@ const Navbar = ({ currentView, onNavigate, cartCount = 0, onCartToggle, onLoginC
             fontWeight: currentView === 'menu' ? 700 : 500,
           }}
           onMouseEnter={(e) => {
-            e.target.style.color = '#ff2d2d'
+            e.target.style.color = '#ff8a00'
             e.target.style.fontWeight = '700'
           }}
           onMouseLeave={(e) => {
@@ -166,7 +166,7 @@ const Navbar = ({ currentView, onNavigate, cartCount = 0, onCartToggle, onLoginC
             fontWeight: currentView === 'services' ? 700 : 500,
           }}
           onMouseEnter={(e) => {
-            e.target.style.color = '#ff2d2d'
+            e.target.style.color = '#ff8a00'
             e.target.style.fontWeight = '700'
           }}
           onMouseLeave={(e) => {

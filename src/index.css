@@ -129,6 +129,21 @@ main {
   flex-wrap: wrap;
 }
 
+.nav-links {
+  position: fixed !important;
+  top: 78px;
+  left: 50%;
+  z-index: 21;
+  width: max-content !important;
+  flex: none !important;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 45, 45, 0.45);
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.88);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.26);
+}
+
 .nav-link {
   white-space: nowrap;
 }
@@ -762,6 +777,9 @@ main {
     flex-wrap: nowrap !important;
     gap: 5px !important;
     justify-content: center !important;
+    top: 58px;
+    padding: 7px 12px;
+    border-radius: 999px;
   }
 
   .nav-actions {
