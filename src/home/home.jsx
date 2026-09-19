@@ -1,7 +1,7 @@
 import './home.css'
 import burgerBg from '../assets/burder2.jpg'
 
-const Home = () => {
+const Home = ({ currentView, onNavigate }) => {
   return (
     <section className="hero">
       <div
@@ -19,6 +19,19 @@ const Home = () => {
           Juicy burgers, loaded fries, and bold flavors made for every craving.
         </p>
       </div>
+
+      <nav className="home-nav" aria-label="Main navigation">
+        {['home', 'menu', 'services'].map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={currentView === item ? 'home-nav-link active' : 'home-nav-link'}
+            onClick={() => onNavigate(item)}
+          >
+            {item[0].toUpperCase() + item.slice(1)}
+          </button>
+        ))}
+      </nav>
     </section>
   )
 }

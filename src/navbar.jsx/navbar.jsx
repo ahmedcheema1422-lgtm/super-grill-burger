@@ -1,6 +1,6 @@
 import logoImage from '../assets/logo.jpg'
 
-const Navbar = ({ currentView, onNavigate, cartCount = 0, onCartToggle, onLoginClick, currentUser, onLogout }) => {
+const Navbar = ({ cartCount = 0, onCartToggle, onLoginClick, currentUser, onLogout }) => {
   return (
     <nav
       className="navbar"
@@ -78,7 +78,7 @@ const Navbar = ({ currentView, onNavigate, cartCount = 0, onCartToggle, onLoginC
             zIndex: 1,
           }}
         >
-          <span className="nav-brand-main" style={{ fontSize: '18px', textTransform: 'uppercase', fontStyle: 'italic', fontWeight: 800 }}>Super Grill</span>
+          <span className="nav-brand-main" style={{ fontSize: '18px', textTransform: 'uppercase', fontStyle: 'italic', fontWeight: 800 }}>Super Grill Burger</span>
           <span
             style={{
               width: '100%',
@@ -89,93 +89,6 @@ const Navbar = ({ currentView, onNavigate, cartCount = 0, onCartToggle, onLoginC
             }}
           />
         </div>
-      </div>
-
-      <div
-        className="nav-links"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '28px',
-          flex: 1,
-          color: '#fff',
-          fontSize: '15px',
-          fontWeight: 600,
-        }}
-      >
-        <button
-          type="button"
-          className="nav-link"
-          onClick={() => onNavigate('home')}
-          style={{
-            cursor: 'pointer',
-            color: currentView === 'home' ? '#ff2d2d' : '#fff',
-            transition: 'color 0.2s ease',
-            fontWeight: currentView === 'home' ? 700 : 500,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.color = '#ff8a00'
-            e.target.style.fontWeight = '700'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.color = currentView === 'home' ? '#ff2d2d' : '#fff'
-            e.target.style.fontWeight = currentView === 'home' ? 700 : 500
-          }}
-        >
-          Home
-        </button>
-        <button
-          type="button"
-          className="nav-link"
-          onClick={() => onNavigate('menu')}
-          style={{
-            cursor: 'pointer',
-            color: currentView === 'menu' ? '#ff2d2d' : '#fff',
-            transition: 'color 0.2s ease',
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            fontWeight: currentView === 'menu' ? 700 : 500,
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.color = '#ff8a00'
-            e.target.style.fontWeight = '700'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.color = currentView === 'menu' ? '#ff2d2d' : '#fff'
-            e.target.style.fontWeight = currentView === 'menu' ? 700 : 500
-          }}
-        >
-          Menu
-        </button>
-        <button
-          type="button"
-          className="nav-link"
-          onClick={() => onNavigate('services')}
-          style={{
-            cursor: 'pointer',
-            color: currentView === 'services' ? '#ff2d2d' : '#fff',
-            transition: 'color 0.2s ease',
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            fontWeight: currentView === 'services' ? 700 : 500,
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.color = '#ff8a00'
-            e.target.style.fontWeight = '700'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.color = currentView === 'services' ? '#ff2d2d' : '#fff'
-            e.target.style.fontWeight = currentView === 'services' ? 700 : 500
-          }}
-        >
-          Services
-        </button>
       </div>
 
       <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flex: 1, gap: '12px' }}>

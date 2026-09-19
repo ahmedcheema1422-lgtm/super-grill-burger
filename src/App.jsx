@@ -343,8 +343,6 @@ const App = () => {
   return (
     <>
       <Navbar
-        currentView={view}
-        onNavigate={handleNavigate}
         cartCount={cartCount}
         onCartToggle={() => setCartOpen((prev) => !prev)}
         currentUser={currentUser}
@@ -358,7 +356,7 @@ const App = () => {
 
       <main>
         <section id="home-section" className="page-section">
-          <Home />
+          <Home currentView={view} onNavigate={handleNavigate} />
         </section>
 
         <section id="menu-section" className="page-section">
