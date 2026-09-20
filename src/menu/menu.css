@@ -3,7 +3,7 @@
   background-color: #121212;
   color: #f8fafc;
   padding: 110px 20px 40px;
-  min-height: 160vh;
+  min-height: 100vh;
   overflow: visible;
 }
 
@@ -48,127 +48,351 @@
   font-size: 1rem;
 }
 
-.menu-category-title {
+.menu-container {
   position: relative;
   z-index: 1;
-  font-size: 1.8rem;
-  color: #fbbf24;
-  margin: 40px auto 20px auto;
-  max-width: 1200px;
-  border-bottom: 2px solid #334155;
-  padding-bottom: 8px;
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 8px;
+  color: #ffffff;
 }
 
-.menu-grid {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+.menu-chicken-burgers-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.2), rgba(26, 26, 26, 0.2)),
+    var(--menu-section-background);
+  background-position: center 70%;
+  background-size: clamp(320px, 78vw, 900px) auto;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.menu-card {
-  background: rgba(15, 23, 42, 0.7);
-  border-radius: 18px;
-  padding: 12px;
-  border: 2px solid #ff6a1a;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+.menu-beef-burgers-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.2), rgba(26, 26, 26, 0.2)),
+    var(--menu-section-background);
+  background-position: center 70%;
+  background-size: clamp(320px, 78vw, 900px) auto;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.menu-card--hoverable:hover {
-  transform: translateY(-6px);
-  border-color: #ff8c42;
-  box-shadow: 0 18px 28px rgba(255, 108, 44, 0.18);
+.menu-loaded-fries-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.menu-card--featured {
-  background: rgba(51, 65, 85, 0.72);
-  backdrop-filter: blur(10px);
-  border: 2px solid #ff6a1a;
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.28);
+.menu-pizza-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.menu-image-wrap {
-  width: 100%;
-  margin-bottom: 14px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(0, 0, 0, 0.25);
+.menu-new-pizza-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.menu-card-image {
-  display: block;
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
+.menu-sandwich-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.menu-badge {
-  align-self: flex-start;
-  background-color: #ff4500;
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: bold;
-  padding: 4px 10px;
-  border-radius: 20px;
+.menu-steak-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-shawarma-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-roll-wrap-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-pizza-deals-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-burger-deals-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-more-deals-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-barbecue-data {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: -20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-container h2 {
+  text-align: center;
+  color: #ffcc00;
+  margin: 0 0 20px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  font-size: 22px;
 }
 
-.menu-item-name {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 8px;
+.menu-section-heading {
+  margin-top: 40px !important;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ef4444;
 }
 
-.menu-item-desc-wrap {
-  margin-bottom: 0;
+.menu-table th,
+.menu-table td {
+  vertical-align: middle;
 }
 
-.menu-item-desc {
-  color: #94a3b8;
-  font-size: 0.88rem;
-  margin: 0;
-  line-height: 1.4;
-}
-
-.menu-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 10px;
-  box-shadow: none;
-  margin-top: 0;
-}
-
-.menu-price {
-  font-size: 1.15rem;
+.deal-badge {
+  display: inline-block;
+  background-color: #eab308;
+  color: #000;
+  padding: 4px 10px;
+  font-size: 12px;
   font-weight: bold;
-  color: #22c55e;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
 }
 
-.menu-order-btn {
-  background-color: #ff4500;
+.super-badge {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.deal-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+.deal-list li {
+  margin-bottom: 3px;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #9ca3af;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.price-tag {
+  color: #4ade80;
+  font-size: 16px;
+}
+
+.menu-header-text {
+  text-align: center;
+  color: #ffcc00;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.category-row td {
+  background-color: #991b1b;
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.menu-sides-section {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+    var(--menu-section-background);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-color: #1a1a1a;
+  margin: 20px -20px -20px;
+  padding: 20px;
+}
+
+.menu-table-wrap {
+  overflow-x: auto;
+  scrollbar-color: #000000 #111111;
+  scrollbar-width: thin;
+}
+
+.menu-table-wrap::-webkit-scrollbar {
+  height: 8px;
+}
+
+.menu-table-wrap::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+.menu-table-wrap::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 4px;
+}
+
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.menu-table th,
+.menu-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #333333;
+}
+
+.menu-table th {
+  background-color: #2c2c2c;
+  color: #ffcc00;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.menu-table td {
+  font-size: 14px;
+}
+
+.menu-table td small {
+  color: #9ca3af;
+  display: block;
+  margin-top: 2px;
+}
+
+.order-btn {
+  background-color: #7c3aed;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 8px 14px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: bold;
   transition: background-color 0.2s ease;
-  box-shadow: none;
 }
 
-.menu-order-btn:hover {
-  background-color: #d93a00;
+.order-btn:hover {
+  background-color: #6d28d9;
 }
 
 @media (max-width: 900px) {
@@ -180,42 +404,83 @@
     font-size: 2.2rem;
   }
 
-  .menu-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 18px;
+  .menu-container {
+    padding: 14px;
   }
 }
 
 @media (max-width: 640px) {
   .menu-page {
-    padding: 150px 14px 30px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
-  .menu-header {
-    margin-bottom: 28px;
+  .menu-container {
+    margin-top: 12px;
+    padding: 10px 6px;
   }
 
-  .menu-title {
-    font-size: 1.8rem;
+  .menu-container h2 {
+    font-size: 17px;
+    margin-bottom: 14px;
   }
 
-  .menu-subtitle {
-    font-size: 0.85rem;
+  .menu-table {
+    table-layout: fixed;
   }
 
-  .menu-category-title {
-    font-size: 1.4rem;
-    margin-top: 28px;
+  .menu-table th,
+  .menu-table td {
+    padding: 9px 3px;
+    font-size: 11px;
+    overflow-wrap: anywhere;
   }
 
-  .menu-card-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .menu-table th {
+    font-size: 10px;
   }
 
-  .menu-order-btn {
+  .menu-table th:first-child,
+  .menu-table td:first-child {
+    width: 34%;
+  }
+
+  .menu-table th:nth-child(2),
+  .menu-table td:nth-child(2),
+  .menu-table th:nth-child(3),
+  .menu-table td:nth-child(3),
+  .menu-table th:nth-child(4),
+  .menu-table td:nth-child(4) {
+    width: 12%;
+    text-align: center;
+  }
+
+  .menu-table th:last-child,
+  .menu-table td:last-child {
+    width: 18%;
+    text-align: center;
+  }
+
+  .order-btn {
+    padding: 7px 3px;
     width: 100%;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  .deal-list {
+    padding-left: 14px;
+    font-size: 10px;
+  }
+
+  .deal-badge {
+    padding: 3px 5px;
+    font-size: 9px;
+  }
+
+  .old-price,
+  .price-tag {
+    font-size: 10px;
   }
 }
 
@@ -229,19 +494,21 @@
     max-width: 70vw;
   }
 
-  .menu-title {
-    font-size: 1.5rem;
+  .menu-container h2 {
+    font-size: 18px;
   }
 
-  .menu-category-title {
-    font-size: 1.2rem;
+  .menu-table th,
+  .menu-table td {
+    padding: 8px 2px;
+    font-size: 10px;
   }
 
-  .menu-item-name {
-    font-size: 1.05rem;
+  .menu-table th {
+    font-size: 9px;
   }
 
-  .menu-item-desc {
-    font-size: 0.8rem;
+  .order-btn {
+    font-size: 9px;
   }
 }

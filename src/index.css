@@ -394,11 +394,13 @@ main {
 
 .checkout-modal {
   width: min(560px, 100%);
+  max-height: min(620px, calc(100vh - 32px));
+  overflow-y: auto;
   background: #181818;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-  padding: 22px 20px;
+  padding: 18px 20px;
 }
 
 .auth-modal-backdrop {
@@ -631,7 +633,7 @@ main {
 
 .checkout-form {
   display: grid;
-  gap: 16px;
+  gap: 11px;
 }
 
 .checkout-form label {
@@ -654,7 +656,7 @@ main {
 }
 
 .checkout-form textarea {
-  min-height: 100px;
+  min-height: 64px;
   resize: vertical;
 }
 
@@ -669,13 +671,13 @@ main {
 }
 
 .checkout-footer {
-  margin-top: 20px;
+  margin-top: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 18px;
+  padding-top: 14px;
 }
 
 .checkout-footer span {
