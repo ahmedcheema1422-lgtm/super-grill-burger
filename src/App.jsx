@@ -3,7 +3,6 @@ import Navbar from './navbar.jsx/navbar.jsx'
 import Home from './home/home.jsx'
 import Menu from './menu/menu.jsx'
 import logoImage from './assets/logo.jpg'
-import { supabase } from './lib/supabase.js'
 
 const STORAGE_KEY = 'super-grill-cart'
 
@@ -211,41 +210,6 @@ const App = () => {
     const itemSummary = cart
       .map((item) => `${item.name} x${item.quantity} - Rs. ${item.price * item.quantity}`)
       .join('\n')
-
-    if (currentUser?.id) {
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          customer_id: currentUser.id,
-          customer_name: customer.name,
-          phone: normalizedPhone,
-          address: customer.address,
-          location: customer.location,
-          notes: customer.notes || null,
-          total: cartTotal,
-        })
-        .select('id')
-        .single()
-
-      if (orderError) {
-        setCheckoutError('Order could not be saved. Please try again.')
-        return
-      }
-
-      const { error: itemError } = await supabase.from('order_items').insert(
-        cart.map((item) => ({
-          order_id: order.id,
-          item_name: item.name,
-          quantity: item.quantity,
-          unit_price: item.price,
-        })),
-      )
-
-      if (itemError) {
-        setCheckoutError('Order items could not be saved. Please try again.')
-        return
-      }
-    }
 
     const whatsappMessage = encodeURIComponent(
       `New Order\n\nCustomer: ${customer.name}\nPhone: ${customer.phone}\nAddress: ${customer.address}\nLocation: ${customer.location}\nNotes: ${customer.notes || 'None'}\n\nItems:\n${itemSummary}\n\nTotal: Rs. ${cartTotal}`,
