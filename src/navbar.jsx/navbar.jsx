@@ -1,6 +1,6 @@
 import logoImage from '../assets/logo.jpg'
 
-const Navbar = ({ cartCount = 0, onCartToggle, onLoginClick, currentUser, onLogout }) => {
+const Navbar = ({ cartCount = 0, onCartToggle }) => {
   return (
     <nav
       className="navbar"
@@ -92,34 +92,6 @@ const Navbar = ({ cartCount = 0, onCartToggle, onLoginClick, currentUser, onLogo
       </div>
 
       <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flex: 1, gap: '12px' }}>
-        <button
-          type="button"
-          className="nav-button nav-button--login"
-          onClick={currentUser ? onLogout : onLoginClick}
-          style={{
-            background: 'transparent',
-            border: '1.5px solid #ff6a00',
-            color: '#ff6a00',
-            borderRadius: '999px',
-            padding: '9px 16px',
-            cursor: 'pointer',
-            fontWeight: 700,
-            letterSpacing: '0.5px',
-            boxShadow: '0 0 0 1px rgba(255, 106, 0, 0.18)',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.background = '#ff6a00'
-            e.target.style.color = '#fff'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.background = 'transparent'
-            e.target.style.color = '#ff6a00'
-          }}
-        >
-          {currentUser ? 'Logout' : 'Login'}
-        </button>
-
         <button
           type="button"
           className="nav-button nav-button--cart"

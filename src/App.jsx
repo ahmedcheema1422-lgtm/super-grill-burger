@@ -6,8 +6,6 @@ import logoImage from './assets/logo.jpg'
 import { supabase } from './lib/supabase.js'
 
 const STORAGE_KEY = 'super-grill-cart'
-const VISIT_POPUP_KEY = 'super-grill-visit-popup-closed'
-const LAST_EMAIL_KEY = 'super-grill-last-email'
 
 const Footer = () => (
   <footer className="site-footer">
@@ -80,31 +78,7 @@ const App = () => {
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [orderSuccessOpen, setOrderSuccessOpen] = useState(false)
   const [checkoutError, setCheckoutError] = useState('')
-  const [authOpen, setAuthOpen] = useState(false)
-  const [authMode, setAuthMode] = useState('login')
-  const [currentUser, setCurrentUser] = useState(null)
-  const [authError, setAuthError] = useState('')
-  const [authForm, setAuthForm] = useState({
-    name: '',
-    phone: '',
-    email: (() => {
-      try {
-        return localStorage.getItem(LAST_EMAIL_KEY) || ''
-      } catch {
-        return ''
-      }
-    })(),
-    address: '',
-    password: '',
-    confirmPassword: '',
-  })
-  const [visitPopupOpen, setVisitPopupOpen] = useState(() => {
-    try {
-      return !localStorage.getItem(VISIT_POPUP_KEY)
-    } catch {
-      return true
-    }
-  })
+  const [currentUser] = useState(null)
   const [customer, setCustomer] = useState({
     name: '',
     phone: '',
@@ -116,67 +90,6 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart))
   }, [cart])
-
-  const loadUserProfile = async (user) => {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('id, name, phone, address, role')
-      .eq('id', user.id)
-      .maybeSingle()
-
-    return profile || {
-      id: user.id,
-      name: user.user_metadata?.name || '',
-      phone: user.user_metadata?.phone || '',
-      address: user.user_metadata?.address || '',
-      email: user.email || '',
-      role: 'customer',
-    }
-  }
-
-  useEffect(() => {
-    let active = true
-
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!active || !session?.user) return
-
-      const profile = await loadUserProfile(session.user)
-      if (active) {
-        setCurrentUser({ ...profile, email: session.user.email })
-        setCustomer((previous) => ({
-          ...previous,
-          name: profile.name,
-          phone: profile.phone,
-          address: profile.address,
-        }))
-        setVisitPopupOpen(false)
-      }
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!session?.user) {
-        if (active) setCurrentUser(null)
-        return
-      }
-
-      const profile = await loadUserProfile(session.user)
-      if (active) {
-        setCurrentUser({ ...profile, email: session.user.email })
-        setCustomer((previous) => ({
-          ...previous,
-          name: profile.name,
-          phone: profile.phone,
-          address: profile.address,
-        }))
-        setVisitPopupOpen(false)
-      }
-    })
-
-    return () => {
-      active = false
-      subscription.unsubscribe()
-    }
-  }, [])
 
   useEffect(() => {
     const faviconImage = new Image()
@@ -201,16 +114,6 @@ const App = () => {
       }
     }
   }, [])
-
-  useEffect(() => {
-    if (!visitPopupOpen) {
-      try {
-        localStorage.setItem(VISIT_POPUP_KEY, 'true')
-      } catch {
-        // no-op
-      }
-    }
-  }, [visitPopupOpen])
 
   const handleNavigate = (nextView) => {
     setView(nextView)
@@ -274,18 +177,11 @@ const App = () => {
   const handleCheckout = () => {
     if (cart.length === 0) return
 
-    if (!currentUser) {
-      setAuthMode('login')
-      setAuthError('Please login before checkout.')
-      setAuthOpen(true)
-      return
-    }
-
     setCustomer((previous) => ({
       ...previous,
-      name: currentUser.name,
-      phone: currentUser.phone,
-      address: currentUser.address,
+      name: currentUser?.name || previous.name,
+      phone: currentUser?.phone || previous.phone,
+      address: currentUser?.address || previous.address,
     }))
     setCheckoutOpen(true)
   }
@@ -316,37 +212,39 @@ const App = () => {
       .map((item) => `${item.name} x${item.quantity} - Rs. ${item.price * item.quantity}`)
       .join('\n')
 
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .insert({
-        customer_id: currentUser.id,
-        customer_name: customer.name,
-        phone: normalizedPhone,
-        address: customer.address,
-        location: customer.location,
-        notes: customer.notes || null,
-        total: cartTotal,
-      })
-      .select('id')
-      .single()
+    if (currentUser?.id) {
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          customer_id: currentUser.id,
+          customer_name: customer.name,
+          phone: normalizedPhone,
+          address: customer.address,
+          location: customer.location,
+          notes: customer.notes || null,
+          total: cartTotal,
+        })
+        .select('id')
+        .single()
 
-    if (orderError) {
-      setCheckoutError('Order could not be saved. Please try again.')
-      return
-    }
+      if (orderError) {
+        setCheckoutError('Order could not be saved. Please try again.')
+        return
+      }
 
-    const { error: itemError } = await supabase.from('order_items').insert(
-      cart.map((item) => ({
-        order_id: order.id,
-        item_name: item.name,
-        quantity: item.quantity,
-        unit_price: item.price,
-      })),
-    )
+      const { error: itemError } = await supabase.from('order_items').insert(
+        cart.map((item) => ({
+          order_id: order.id,
+          item_name: item.name,
+          quantity: item.quantity,
+          unit_price: item.price,
+        })),
+      )
 
-    if (itemError) {
-      setCheckoutError('Order items could not be saved. Please try again.')
-      return
+      if (itemError) {
+        setCheckoutError('Order items could not be saved. Please try again.')
+        return
+      }
     }
 
     const whatsappMessage = encodeURIComponent(
@@ -364,100 +262,11 @@ const App = () => {
     setOrderSuccessOpen(true)
   }
 
-  const handleAuthChange = (field, value) => {
-    setAuthForm((previous) => ({
-      ...previous,
-      [field]: value,
-    }))
-    setAuthError('')
-  }
-
-  const handleAuthSubmit = async (event) => {
-    event.preventDefault()
-
-    const email = authForm.email.trim().toLowerCase()
-
-    try {
-      if (authMode === 'signup') {
-        if (authForm.password !== authForm.confirmPassword) {
-          setAuthError('Passwords do not match.')
-          return
-        }
-
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password: authForm.password,
-          options: {
-            data: {
-              name: authForm.name.trim(),
-              phone: authForm.phone.trim(),
-              address: authForm.address.trim(),
-            },
-          },
-        })
-
-        if (error) {
-          setAuthError(error.message)
-          return
-        }
-
-        localStorage.setItem(LAST_EMAIL_KEY, email)
-
-        if (!data.session) {
-          setAuthError('Account created. Check your email to confirm your account, then login.')
-          setAuthMode('login')
-          setAuthForm((previous) => ({ ...previous, password: '', confirmPassword: '' }))
-          return
-        }
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password: authForm.password,
-        })
-
-        if (error || !data.user) {
-          setAuthError(error?.message || 'Email or password is incorrect.')
-          return
-        }
-
-        localStorage.setItem(LAST_EMAIL_KEY, email)
-      }
-
-      setAuthForm({ name: '', phone: '', email, address: '', password: '', confirmPassword: '' })
-      setAuthError('')
-      setVisitPopupOpen(false)
-    } catch {
-      setAuthError('Unable to connect to Supabase. Please try again.')
-      return
-    }
-
-    setAuthOpen(false)
-
-    if (cart.length > 0) {
-      setCheckoutOpen(true)
-    }
-  }
-
-  const handleLogout = async () => {
-    const savedEmail = currentUser?.email || ''
-    await supabase.auth.signOut()
-    setCurrentUser(null)
-    setAuthMode('login')
-    setAuthForm({ name: '', phone: '', email: savedEmail, address: '', password: '', confirmPassword: '' })
-  }
-
   return (
     <>
       <Navbar
         cartCount={cartCount}
         onCartToggle={() => setCartOpen((prev) => !prev)}
-        currentUser={currentUser}
-        onLogout={handleLogout}
-        onLoginClick={() => {
-          setAuthMode('login')
-          setAuthError('')
-          setAuthOpen(true)
-        }}
       />
 
       <main>
@@ -498,111 +307,6 @@ const App = () => {
           </div>
         </section>
       </main>
-
-      {visitPopupOpen && (
-        <div className="auth-modal-backdrop" onClick={() => setVisitPopupOpen(false)}>
-          <div className="auth-modal" onClick={(event) => event.stopPropagation()}>
-            <div className="auth-modal-header">
-              <h3>Welcome to Super Grill</h3>
-              <button type="button" className="auth-close" onClick={() => setVisitPopupOpen(false)}>
-                ×
-              </button>
-            </div>
-
-            <p>Login or create an account to place your order faster and track your food.</p>
-
-            <div className="visit-popup-actions">
-              <button type="button" className="primary-btn" onClick={() => {
-                setAuthMode('login')
-                setAuthError('')
-                setAuthOpen(true)
-                setVisitPopupOpen(false)
-              }}>
-                Login
-              </button>
-              <button type="button" className="secondary-btn" onClick={() => {
-                setAuthMode('signup')
-                setAuthError('')
-                setAuthOpen(true)
-                setVisitPopupOpen(false)
-              }}>
-                Sign Up
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {authOpen && (
-        <div className="auth-modal-backdrop" onClick={() => setAuthOpen(false)}>
-          <div className="auth-modal" onClick={(event) => event.stopPropagation()}>
-            <div className="auth-modal-header">
-              <h3>{authMode === 'login' ? 'Login' : 'Sign Up'}</h3>
-              <button type="button" className="auth-close" onClick={() => setAuthOpen(false)}>
-                ×
-              </button>
-            </div>
-
-            <form className="auth-form" onSubmit={handleAuthSubmit}>
-              {authMode === 'signup' && (
-                <>
-                  <label>
-                    Full Name
-                    <input type="text" value={authForm.name} onChange={(event) => handleAuthChange('name', event.target.value)} placeholder="Your name" required />
-                  </label>
-
-                  <label>
-                    Phone Number
-                    <input type="tel" value={authForm.phone} onChange={(event) => handleAuthChange('phone', event.target.value)} placeholder="03xx xxxxxxx" required />
-                  </label>
-
-                  <label>
-                    Home Address
-                    <textarea value={authForm.address} onChange={(event) => handleAuthChange('address', event.target.value)} placeholder="Street, house no, area" required />
-                  </label>
-                </>
-              )}
-
-              <label>
-                Email
-                <input type="email" value={authForm.email} onChange={(event) => handleAuthChange('email', event.target.value)} placeholder="you@example.com" required />
-              </label>
-
-              <label>
-                Password
-                <input type="password" value={authForm.password} onChange={(event) => handleAuthChange('password', event.target.value)} placeholder="Enter password" minLength="6" required />
-              </label>
-
-              {authMode === 'signup' && (
-                <label>
-                  Confirm Password
-                  <input type="password" value={authForm.confirmPassword} onChange={(event) => handleAuthChange('confirmPassword', event.target.value)} placeholder="Write password again" minLength="6" required />
-                </label>
-              )}
-
-              {authError && <p className="auth-error" role="alert">{authError}</p>}
-
-              <button type="submit" className="primary-btn full-width-btn">
-                {authMode === 'login' ? 'Login' : 'Create Account'}
-              </button>
-            </form>
-
-            <p className="auth-toggle-text">
-              {authMode === 'login' ? 'Don’t have an account?' : 'Already have an account?'}{' '}
-              <button
-                type="button"
-                className="text-button"
-                onClick={() => {
-                  setAuthMode(authMode === 'login' ? 'signup' : 'login')
-                  setAuthError('')
-                }}
-              >
-                {authMode === 'login' ? 'Sign Up' : 'Login'}
-              </button>
-            </p>
-          </div>
-        </div>
-      )}
 
       <div className={`cart-overlay ${cartOpen ? 'open' : ''}`} onClick={() => setCartOpen(false)} />
 
