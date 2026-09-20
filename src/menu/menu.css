@@ -64,8 +64,8 @@
   background-image:
     linear-gradient(rgba(26, 26, 26, 0.2), rgba(26, 26, 26, 0.2)),
     var(--menu-section-background);
-  background-position: center 70%;
-  background-size: clamp(320px, 78vw, 900px) auto;
+  background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-color: #1a1a1a;
@@ -78,8 +78,8 @@
   background-image:
     linear-gradient(rgba(26, 26, 26, 0.2), rgba(26, 26, 26, 0.2)),
     var(--menu-section-background);
-  background-position: center 70%;
-  background-size: clamp(320px, 78vw, 900px) auto;
+  background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-color: #1a1a1a;
