@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import logoImage from '../assets/logo.jpg'
 import chickenBurgerBackground from '../assets/11.jpg'
 import beefBurgerBackground from '../assets/12.jpg'
@@ -244,17 +244,51 @@ const sidesCategories = [
   },
 ]
 
-const OrderButton = ({ item, onAddToCart }) => (
+const OrderButton = ({ item, onAddToCart, variantType, onSelectVariant }) => (
   <button
     type="button"
     className="order-btn"
-    onClick={() => onAddToCart({ ...item, price: `Rs. ${item.price}` })}
+    onClick={() => {
+      if (variantType) {
+        onSelectVariant({ ...item, variantType })
+        return
+      }
+
+      onAddToCart({ ...item, price: `Rs. ${item.price}` })
+    }}
   >
     Order Now
   </button>
 )
 
 const Menu = ({ onAddToCart }) => {
+  const [variantItem, setVariantItem] = useState(null)
+
+  const variantOptions = variantItem?.variantType === 'burger'
+    ? [
+        { key: 'single', label: 'Single Patty' },
+        { key: 'double', label: 'Double Patty' },
+        { key: 'triple', label: 'Triple Patty' },
+      ]
+    : [
+        { key: 'small', label: 'Small' },
+        { key: 'medium', label: 'Medium' },
+        { key: 'large', label: 'Large' },
+      ]
+
+  const handleVariantSelect = (option) => {
+    const price = variantItem[option.key]
+
+    if (!price || price === '—') return
+
+    onAddToCart({
+      ...variantItem,
+      name: `${variantItem.name} (${option.label})`,
+      price: `Rs. ${price}`,
+    })
+    setVariantItem(null)
+  }
+
   return (
     <div className="menu-page">
       <div className="menu-logo-backdrop">
@@ -294,7 +328,12 @@ const Menu = ({ onAddToCart }) => {
                     <td>{item.double}</td>
                     <td>{item.triple}</td>
                     <td>
-                      <OrderButton item={{ ...item, price: item.triple }} onAddToCart={onAddToCart} />
+                      <OrderButton
+                        item={{ ...item, price: item.triple }}
+                        variantType="burger"
+                        onSelectVariant={setVariantItem}
+                        onAddToCart={onAddToCart}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -327,7 +366,12 @@ const Menu = ({ onAddToCart }) => {
                     <td>{item.double}</td>
                     <td>{item.triple}</td>
                     <td>
-                      <OrderButton item={{ ...item, price: item.triple }} onAddToCart={onAddToCart} />
+                      <OrderButton
+                        item={{ ...item, price: item.triple }}
+                        variantType="burger"
+                        onSelectVariant={setVariantItem}
+                        onAddToCart={onAddToCart}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -390,7 +434,7 @@ const Menu = ({ onAddToCart }) => {
                     <td>{item.small}</td>
                     <td>{item.medium}</td>
                     <td>{item.large}</td>
-                    <td><OrderButton item={item} onAddToCart={onAddToCart} /></td>
+                    <td><OrderButton item={item} variantType="pizza" onSelectVariant={setVariantItem} onAddToCart={onAddToCart} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -421,7 +465,7 @@ const Menu = ({ onAddToCart }) => {
                     <td>{item.small}</td>
                     <td>{item.medium}</td>
                     <td>{item.large}</td>
-                    <td><OrderButton item={item} onAddToCart={onAddToCart} /></td>
+                    <td><OrderButton item={item} variantType="pizza" onSelectVariant={setVariantItem} onAddToCart={onAddToCart} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -506,7 +550,7 @@ const Menu = ({ onAddToCart }) => {
                     <td>{item.small}</td>
                     <td>{item.medium}</td>
                     <td>{item.large}</td>
-                    <td><OrderButton item={item} onAddToCart={onAddToCart} /></td>
+                    <td><OrderButton item={item} variantType="shawarma" onSelectVariant={setVariantItem} onAddToCart={onAddToCart} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -715,6 +759,53 @@ const Menu = ({ onAddToCart }) => {
             </table>
           </div>
         </section>
+
+        {variantItem && (
+          <div className="variant-modal-backdrop" onClick={() => setVariantItem(null)}>
+            <div
+              className="variant-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="variant-modal-title"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="variant-modal-header">
+                <div>
+                  <span className="variant-modal-eyebrow">Choose your option</span>
+                  <h3 id="variant-modal-title">{variantItem.name}</h3>
+                </div>
+                <button
+                  type="button"
+                  className="variant-modal-close"
+                  aria-label="Close selection"
+                  onClick={() => setVariantItem(null)}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="variant-options">
+                {variantOptions.map((option) => {
+                  const price = variantItem[option.key]
+                  const unavailable = !price || price === '—'
+
+                  return (
+                    <button
+                      type="button"
+                      className="variant-option"
+                      key={option.key}
+                      disabled={unavailable}
+                      onClick={() => handleVariantSelect(option)}
+                    >
+                      <span>{option.label}</span>
+                      <strong>{unavailable ? 'Unavailable' : `Rs. ${price}`}</strong>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   )
